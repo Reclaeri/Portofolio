@@ -19,7 +19,12 @@ const prefersReducedMotion = window.matchMedia(
 function initRoleTyping() {
   const target = document.querySelector("#typed-role");
   if (!target || prefersReducedMotion) return;
-  const roles = ["Web Developer", "Software Developer", "Game Developer"];
+  const roles = [
+    "Student In SMK Negeri 1 Cibinong",
+    "Web Developer",
+    "Software Developer",
+    "Game Developer",
+  ];
   let roleIndex = 0;
   let length = roles[0].length;
   let deleting = true;
@@ -199,6 +204,7 @@ const technologyLogos = {
   JavaScript: "javascript",
   PHP: "php",
   "C#": "csharp",
+  Java: "java",
   Python: "python",
   Dart: "dart",
   "Node.js": "nodejs",
@@ -212,6 +218,7 @@ const technologyLogos = {
   GitHub: "github",
   "Visual Studio Code": "vscode",
   "Visual Studio": "visualstudio",
+  NetBeans: "netbeans",
   XAMPP: "xampp",
   Laragon: "laragon",
   GDevelop: "gdevelop",
@@ -326,34 +333,64 @@ filterRoot.addEventListener("click", (event) => {
 });
 
 const certificateRoot = document.querySelector("#certificate-list");
+const certificateFilterRoot = document.querySelector("#certificate-filters");
+const plannedCertificateRoot = document.querySelector("#planned-certificate-list");
 const certificateDialog = document.querySelector(".certificate-dialog");
 const certificatePreview = certificateDialog.querySelector(
   "#certificate-preview-content",
 );
 const certificateFileUrl = (file) => encodeURI(file);
-if (certificates.length) {
-  certificateRoot.innerHTML = certificates
-    .map(
-      (certificate, index) => `
-    <article class="certificate-card reveal" style="--reveal-delay:${index * 75}ms"><div class="certificate-art ${certificate.file.endsWith(".png") ? "certificate-art-image" : ""}">${certificate.file.endsWith(".png") ? `<img src="${escapeHtml(certificateFileUrl(certificate.file))}" alt="Preview ${escapeHtml(certificate.title)}" loading="lazy">` : `<span class="certificate-file-icon" aria-hidden="true">PDF</span><span class="certificate-file-label">ORIGINAL FILE</span>`}</div>
-      <div class="certificate-copy"><span class="certificate-status">${escapeHtml(certificate.status || "Earned")}</span><h3>${escapeHtml(certificate.title)}</h3><p>${escapeHtml(certificate.issuer)}${certificate.date ? ` · ${escapeHtml(certificate.date)}` : ""}${certificate.category ? ` · ${escapeHtml(certificate.category)}` : ""}</p></div>
-      <div class="certificate-actions"><button type="button" class="certificate-view" data-certificate-view="${index}">Preview</button></div></article>`,
-    )
+const certificateFilters = [
+  { label: "All", value: "All" },
+  { label: "Course", value: "Course" },
+  { label: "Competency", value: "Competency" },
+];
+certificateFilterRoot.innerHTML = certificateFilters
+  .map(
+    (filter, index) =>
+      `<button type="button" class="certificate-filter${index === 0 ? " is-active" : ""}" data-certificate-filter="${filter.value}" aria-pressed="${index === 0}">${filter.label}</button>`,
+  )
+  .join("");
+
+function renderCertificates(filter = "All") {
+  const visibleCertificates = certificates.filter(
+    (certificate) => filter === "All" || certificate.group === filter,
+  );
+  certificateRoot.innerHTML = visibleCertificates
+    .map((certificate, index) => {
+      const originalIndex = certificates.indexOf(certificate);
+      return `
+    <article class="certificate-card reveal" style="--reveal-delay:${index * 75}ms"><div class="certificate-art certificate-art-image"><img src="${escapeHtml(certificateFileUrl(certificate.cover))}" alt="Cover ${escapeHtml(certificate.title)}" loading="lazy" decoding="async"></div>
+      <div class="certificate-copy"><span class="certificate-status">${escapeHtml(certificate.group)}</span><h3>${escapeHtml(certificate.title)}</h3><p>${escapeHtml(certificate.issuer)}${certificate.date ? ` · ${escapeHtml(certificate.date)}` : ""}${certificate.category ? ` · ${escapeHtml(certificate.category)}` : ""}</p></div>
+      <div class="certificate-actions"><button type="button" class="certificate-view" data-certificate-view="${originalIndex}">Preview</button></div></article>`;
+    })
     .join("");
-  certificateRoot.addEventListener("click", (event) => {
-    const button = event.target.closest("[data-certificate-view]");
-    if (!button) return;
-    const certificate = certificates[Number(button.dataset.certificateView)];
-    const url = certificateFileUrl(certificate.file);
-    const isPdf = certificate.file.toLowerCase().endsWith(".pdf");
-    certificatePreview.innerHTML = isPdf
-      ? `<iframe class="certificate-pdf" src="${escapeHtml(url)}#toolbar=0&navpanes=0" title="${escapeHtml(certificate.title)}"></iframe>`
-      : `<img class="certificate-image-preview" src="${escapeHtml(url)}" alt="${escapeHtml(certificate.title)}">`;
-    certificateDialog.querySelector(".certificate-dialog-title").textContent =
-      certificate.title;
-    certificateDialog.showModal();
-  });
+  observeReveals();
 }
+renderCertificates();
+certificateFilterRoot.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-certificate-filter]");
+  if (!button) return;
+  certificateFilterRoot.querySelectorAll("[data-certificate-filter]").forEach((filter) => {
+    const active = filter === button;
+    filter.classList.toggle("is-active", active);
+    filter.setAttribute("aria-pressed", String(active));
+  });
+  renderCertificates(button.dataset.certificateFilter);
+});
+certificateRoot.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-certificate-view]");
+  if (!button) return;
+  const certificate = certificates[Number(button.dataset.certificateView)];
+  const url = certificateFileUrl(certificate.file);
+  const isPdf = certificate.file.toLowerCase().endsWith(".pdf");
+  certificatePreview.innerHTML = isPdf
+    ? `<iframe class="certificate-pdf" src="${escapeHtml(url)}#toolbar=0&navpanes=0" title="${escapeHtml(certificate.title)}"></iframe>`
+    : `<img class="certificate-image-preview" src="${escapeHtml(url)}" alt="${escapeHtml(certificate.title)}">`;
+  certificateDialog.querySelector(".certificate-dialog-title").textContent =
+    certificate.title;
+  certificateDialog.showModal();
+});
 const plannedMarkup = plannedCertifications
   .map(
     (item, index) => `
@@ -361,10 +398,7 @@ const plannedMarkup = plannedCertifications
     <div><span class="certificate-status planned-status">${escapeHtml(item.status)}</span><h3>${escapeHtml(item.title)}</h3><p>${escapeHtml(item.issuer)} · ${escapeHtml(item.category)}</p></div></article>`,
   )
   .join("");
-certificateRoot.insertAdjacentHTML("beforeend", plannedMarkup);
-if (!certificates.length && !plannedCertifications.length)
-  certificateRoot.innerHTML =
-    '<div class="certificate-empty"><span class="certificate-empty-mark">✳</span><p>Belum ada sertifikat yang ditambahkan.<span>Sertifikat hanya ditampilkan sebagai diperoleh setelah data resmi tersedia.</span></p></div>';
+plannedCertificateRoot.innerHTML = plannedMarkup;
 
 document
   .querySelectorAll("dialog .dialog-close")

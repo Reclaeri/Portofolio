@@ -18,7 +18,7 @@ export const projects = [
     number: "02",
     description:
       "Game petualangan edukatif tentang perjalanan Andi dalam membantu memulihkan kesehatan ibunya melalui eksplorasi, misi kebersihan, dan puzzle interaktif.",
-    technologies: ["GDevelop", "Event-based logic"],
+    technologies: ["JavaScript", "HTML5", "CSS3"],
     status: "Project Screenshot",
     image: "images/projects/for-mother.png",
   },
@@ -29,7 +29,7 @@ export const projects = [
     number: "03",
     description:
       "Project game misteri yang berfokus pada eksplorasi, pencarian petunjuk, dan pengungkapan cerita.",
-    technologies: [],
+    technologies: ["JavaScript", "HTML5", "CSS3"],
     status: "Project Screenshot",
     image: "images/projects/silent-evidence.png",
   },
@@ -56,7 +56,7 @@ export const projects = [
     number: "05",
     description:
       "Bot WhatsApp sederhana untuk mempelajari otomatisasi pesan, logika respons, dan pemrosesan input pengguna.",
-    technologies: [],
+    technologies: ["Node.js", "Visual Studio Code"],
     status: "Project Screenshot",
     image: "images/projects/whatsapp-bot.jpg",
   },

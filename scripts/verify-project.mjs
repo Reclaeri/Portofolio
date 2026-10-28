@@ -31,6 +31,19 @@ for (const project of projects) {
   );
 }
 assert.deepEqual(
+  projects.find((project) => project.title === "For Mother")?.technologies,
+  ["JavaScript", "HTML5", "CSS3"],
+);
+assert.deepEqual(
+  projects.find((project) => project.title.startsWith("Silent Evidence"))
+    ?.technologies,
+  ["JavaScript", "HTML5", "CSS3"],
+);
+assert.deepEqual(
+  projects.find((project) => project.title === "WhatsApp Bot")?.technologies,
+  ["Node.js", "Visual Studio Code"],
+);
+assert.deepEqual(
   ["Web", "Desktop", "Games", "Automation"].map(
     (category) =>
       projects.filter((project) => project.filter === category).length,
@@ -39,8 +52,25 @@ assert.deepEqual(
   "Project filters should return the expected categories.",
 );
 assert.equal(skillGroups.length, 4, "Expected four skill categories.");
+const techStack = skillGroups.flatMap((group) => group.items);
+assert.ok(techStack.includes("Java") && techStack.includes("NetBeans"));
+for (const logo of ["java.svg", "netbeans.svg"]) {
+  assert.ok(existsSync(join(root, "images/skills", logo)), `Missing logo: ${logo}`);
+}
 assert.equal(certificates.length, 5, "Expected five original certificates.");
+assert.deepEqual(
+  ["Course", "Competency"].map(
+    (group) => certificates.filter((certificate) => certificate.group === group).length,
+  ),
+  [2, 3],
+  "Expected Dicoding courses and Neo One/Clevio competency certificates in separate groups.",
+);
 for (const certificate of certificates) {
+  assert.ok(["Course", "Competency"].includes(certificate.group));
+  assert.ok(
+    existsSync(join(root, certificate.cover)),
+    `Missing certificate cover: ${certificate.cover}`,
+  );
   assert.ok(
     certificate.file.startsWith("sertifikat/"),
     `Certificate must link to sertifikat/: ${certificate.file}`,

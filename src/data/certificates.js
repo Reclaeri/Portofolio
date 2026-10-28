@@ -5,7 +5,9 @@ export const certificates = [
     issuer: 'Dicoding',
     date: '25 Agustus 2026',
     category: 'Programming',
+    group: 'Course',
     file: 'sertifikat/sertifikat dart dicoding.pdf',
+    cover: 'images/certificates/dicoding-dart-cover.png',
     credentialId: '98XW8KOL0PM3'
   },
   {
@@ -13,7 +15,9 @@ export const certificates = [
     issuer: 'Dicoding',
     date: '28 Agustus 2026',
     category: 'Mobile Development',
+    group: 'Course',
     file: 'sertifikat/sertifikat flutter dicoding.pdf',
+    cover: 'images/certificates/dicoding-flutter-cover.png',
     credentialId: '1OP87LK2VZQK'
   },
   {
@@ -21,21 +25,27 @@ export const certificates = [
     issuer: 'Clevio Innovator Camp',
     date: '2026',
     category: 'Game Development',
-    file: 'sertifikat/sertifikat lcgn clevio.png'
+    group: 'Competency',
+    file: 'sertifikat/sertifikat lcgn clevio.png',
+    cover: 'sertifikat/sertifikat lcgn clevio.png'
   },
   {
     title: 'Professional Recognition — SIKES RPL',
     issuer: 'Neo One Industry Validation',
     date: '20 Mei 2026',
     category: 'Professional Recognition',
-    file: 'sertifikat/sertifikat perorangan kik neone.pdf'
+    group: 'Competency',
+    file: 'sertifikat/sertifikat perorangan kik neone.pdf',
+    cover: 'images/certificates/neo-one-recognition-cover.png'
   },
   {
     title: 'Official Industry Project Review — SIKES RPL',
     issuer: 'PT Neo One Global Inovasi',
     date: '20 Mei 2026',
     category: 'Project Review',
-    file: 'sertifikat/sertifikat project kik neone.pdf'
+    group: 'Competency',
+    file: 'sertifikat/sertifikat project kik neone.pdf',
+    cover: 'images/certificates/neo-one-project-cover.png'
   }
 ];
 
