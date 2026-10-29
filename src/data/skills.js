@@ -43,10 +43,10 @@ export const skillGroups = [
 
 // Nilai contoh: ubah `percent` sesuai penilaianmu sendiri (0–100).
 export const skillLevels = [
-  { label: "HTML5 / CSS3", percent: 80 },
-  { label: "JavaScript", percent: 70 },
+  { label: "HTML5 / CSS3", percent: 85 },
+  { label: "JavaScript", percent: 80 },
   { label: "PHP / Laravel", percent: 75 },
-  { label: "Python / C#", percent: 75 },
+  { label: "Python / C#", percent: 70 },
   { label: "Dart / Flutter", percent: 50 },
   { label: "Git / GitHub", percent: 70 },
 ];
