@@ -3,7 +3,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { projects } from "../src/data/projects.js";
-import { skillGroups } from "../src/data/skills.js";
+import { skillGroups, skillLevels } from "../src/data/skills.js";
 import {
   certificates,
   plannedCertifications,
@@ -19,14 +19,14 @@ assert.ok(
   "The reveal observer must be initialized before the first project render.",
 );
 
-assert.equal(projects.length, 5, "Expected all five named projects.");
+assert.equal(projects.length, 8, "Expected all eight named projects.");
 for (const project of projects) {
   assert.ok(
     existsSync(join(root, project.image)),
     `Missing project image: ${project.image}`,
   );
   assert.ok(
-    ["Web", "Desktop", "Games", "Automation"].includes(project.filter),
+  ["Web", "Desktop", "Games", "Automation"].includes(project.filter),
     `Unknown filter: ${project.filter}`,
   );
 }
@@ -44,26 +44,54 @@ assert.deepEqual(
   ["Node.js", "Visual Studio Code"],
 );
 assert.deepEqual(
+  ["Blog Pribadi", "Google Offices", "Website Nilai Raport"].map((title) =>
+    projects.find((project) => project.title === title)?.technologies,
+  ),
+  [
+    ["Python", "Django", "MySQL"],
+    ["Flutter", "Dart"],
+    ["PHP", "Laravel", "MySQL"],
+  ],
+);
+assert.deepEqual(
   ["Web", "Desktop", "Games", "Automation"].map(
     (category) =>
       projects.filter((project) => project.filter === category).length,
   ),
-  [1, 1, 2, 1],
+  [4, 1, 2, 1],
   "Project filters should return the expected categories.",
 );
+assert.equal(projects.find((project) => project.title === "Google Offices")?.filter, "Web");
+for (const title of ["Blog Pribadi", "Google Offices", "Website Nilai Raport"]) {
+  assert.ok(projects.find((project) => project.title === title)?.features?.length,
+    `Expected approved feature specs for ${title}.`);
+}
+assert.ok(skillLevels.length >= 7, "Expected the added core skill entry.");
 assert.equal(skillGroups.length, 4, "Expected four skill categories.");
 const techStack = skillGroups.flatMap((group) => group.items);
-assert.ok(techStack.includes("Java") && techStack.includes("NetBeans"));
-for (const logo of ["java.svg", "netbeans.svg"]) {
+assert.ok(
+  techStack.includes("Java") &&
+    techStack.includes("NetBeans") &&
+    techStack.includes("Django") &&
+    techStack.includes("draw.io"),
+);
+for (const logo of ["java.svg", "netbeans.svg", "django.svg", "drawio.svg"]) {
   assert.ok(existsSync(join(root, "images/skills", logo)), `Missing logo: ${logo}`);
 }
-assert.equal(certificates.length, 5, "Expected five original certificates.");
+assert.equal(certificates.length, 7, "Expected seven original certificates.");
 assert.deepEqual(
   ["Course", "Competency"].map(
     (group) => certificates.filter((certificate) => certificate.group === group).length,
   ),
-  [2, 3],
+  [4, 3],
   "Expected Dicoding courses and Neo One/Clevio competency certificates in separate groups.",
+);
+assert.deepEqual(
+  certificates.slice(2, 4).map(({ title, group, credentialId }) => ({ title, group, credentialId })),
+  [
+    { title: "Prompt Engineering untuk Software Developer", group: "Course", credentialId: "6RPNOY915X2M" },
+    { title: "Belajar Dasar AI", group: "Course", credentialId: "07Z6Q470MZQR" },
+  ],
 );
 for (const certificate of certificates) {
   assert.ok(["Course", "Competency"].includes(certificate.group));
@@ -71,6 +99,19 @@ for (const certificate of certificates) {
     existsSync(join(root, certificate.cover)),
     `Missing certificate cover: ${certificate.cover}`,
   );
+assert.ok(
+  skillGroups.some(
+    (group) =>
+      group.title.includes("Framework") && group.items.includes("Django"),
+  ),
+  "Django should appear in the framework category.",
+);
+assert.ok(
+  skillGroups.some(
+    (group) => group.title.includes("Tools") && group.items.includes("draw.io"),
+  ),
+  "draw.io should appear in the tools category.",
+);
   assert.ok(
     certificate.file.startsWith("sertifikat/"),
     `Certificate must link to sertifikat/: ${certificate.file}`,
@@ -119,7 +160,13 @@ assert.ok(
   app.includes("aria-pressed"),
   "Project filter buttons should expose state to assistive technology.",
 );
+assert.ok(
+  app.includes("technology-category-title"),
+  "Technology stack categories should be rendered visibly.",
+);
+assert.ok(html.includes('id="skill-level-count"'));
+assert.ok(app.includes('String(skillLevels.length).padStart(2, "0")'));
 
 console.log(
-  "Portfolio verification passed: sections, local covers, filters, certificate previews, five original certificates, planned certifications, and social URLs.",
+  "Portfolio verification passed: sections, eight local project images, categorized technology logos, project filters, certificate previews, original certificates, and social URLs.",
 );

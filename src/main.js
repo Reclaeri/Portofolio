@@ -211,6 +211,7 @@ const technologyLogos = {
   Bootstrap: "bootstrap",
   Laravel: "laravel",
   Flutter: "flutter",
+  Django: "django",
   MySQL: "mysql",
   "SQL Server": "microsoftsqlserver",
   "SQL Server LocalDB": "microsoftsqlserver",
@@ -219,6 +220,7 @@ const technologyLogos = {
   "Visual Studio Code": "vscode",
   "Visual Studio": "visualstudio",
   NetBeans: "netbeans",
+  "draw.io": "drawio",
   XAMPP: "xampp",
   Laragon: "laragon",
   GDevelop: "gdevelop",
@@ -227,17 +229,23 @@ const technologyLogos = {
 
 function renderTechnology(item, category, index) {
   const logo = technologyLogos[item] || "code";
-  return `<div class="technology-card reveal" title="${escapeHtml(category)}" style="--skill-delay:${index * 35}ms;--reveal-delay:${Math.min(index, 9) * 45}ms">
+  return `<div class="technology-card technology-card-${escapeHtml(logo)} reveal" title="${escapeHtml(category)}" style="--skill-delay:${index * 35}ms;--reveal-delay:${Math.min(index, 9) * 45}ms">
     <span class="technology-logo" aria-hidden="true"><img src="images/skills/${escapeHtml(logo)}.svg" alt="" loading="lazy" decoding="async"></span>
     <span class="technology-name">${escapeHtml(item)}</span>
   </div>`;
 }
 
-const allTechnologies = skillGroups.flatMap((group) =>
-  group.items.map((item) => ({ item, category: group.title })),
-);
-document.querySelector("#skills-grid").innerHTML = allTechnologies
-  .map(({ item, category }, index) => renderTechnology(item, category, index))
+const allTechnologies = skillGroups.flatMap((group) => group.items);
+let technologyIndex = 0;
+document.querySelector("#skills-grid").innerHTML = skillGroups
+  .map(
+    (group) => `<section class="technology-category" aria-label="${escapeHtml(group.title)}">
+      <h4 class="technology-category-title">${escapeHtml(group.title)}</h4>
+      <div class="technology-group-grid">${group.items
+        .map((item) => renderTechnology(item, group.title, technologyIndex++))
+        .join("")}</div>
+    </section>`,
+  )
   .join("");
 
 document.querySelector("#skill-levels").innerHTML = skillLevels
@@ -251,6 +259,8 @@ document.querySelector("#skill-levels").innerHTML = skillLevels
   </div>`;
   })
   .join("");
+document.querySelector("#skill-level-count").textContent =
+  `01 — ${String(skillLevels.length).padStart(2, "0")}`;
 document.querySelector("#technology-count").textContent =
   `${allTechnologies.length} TECHNOLOGIES`;
 
@@ -283,10 +293,11 @@ function renderProjects(filter = "All") {
       <article class="project-card reveal" style="--reveal-delay:${index * 65}ms">
       <div class="project-art">
         <img class="project-image" src="${escapeHtml(project.image)}" alt="Screenshot project ${escapeHtml(project.title)}" loading="lazy" decoding="async">
-        <span class="art-number">${escapeHtml(project.number)} / 05</span>
+        <span class="art-number">${escapeHtml(project.number)} / ${String(projects.length).padStart(2, "0")}</span>
       </div>
       <div class="project-body"><div class="project-meta"><span>${escapeHtml(project.category)}</span><span class="project-status">${escapeHtml(project.status)}</span></div>
         <h3>${escapeHtml(project.title)}</h3><p>${escapeHtml(project.description)}</p>
+        ${project.features?.length ? `<ul class="project-features" aria-label="Fitur utama">${project.features.map((feature) => `<li>${escapeHtml(feature)}</li>`).join("")}</ul>` : ""}
         ${project.technologies.length ? `<div class="project-tags">${project.technologies.map((tech) => `<span class="tag">${escapeHtml(tech)}</span>`).join("")}</div>` : '<div class="project-tags"><span class="tag">Technology details to be confirmed</span></div>'}
       </div>
     </article>`,

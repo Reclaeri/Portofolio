@@ -642,6 +642,26 @@ button {
   font-size: 10px;
   line-height: 1.8;
 }
+.project-features {
+  display: grid;
+  gap: 5px;
+  margin: 11px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.project-features li {
+  position: relative;
+  padding-left: 13px;
+  color: #b0bbb2;
+  font-size: 9px;
+  line-height: 1.55;
+}
+.project-features li::before {
+  position: absolute;
+  left: 0;
+  color: #82d995;
+  content: "↳";
+}
 .project-tags {
   display: flex;
   flex-wrap: wrap;
@@ -2283,6 +2303,33 @@ button {
   font-weight: 650;
   transition: color 0.2s ease;
 }
+#skills-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 18px;
+  border: 0;
+}
+.technology-category {
+  min-width: 0;
+}
+.technology-category-title {
+  margin: 0 0 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #273129;
+  color: #91dca3;
+  font: 8px var(--mono);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.technology-group-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 9px;
+}
+.technology-card-django .technology-logo {
+  width: 56px;
+  height: 30px;
+}
 .technology-card:hover .technology-name {
   color: #f0f7f1;
 }
@@ -2352,13 +2399,16 @@ button {
   .technology-card {
     min-height: 88px;
   }
+  .technology-group-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 @media (max-width: 680px) {
   .skills-layout {
     grid-template-columns: 1fr;
     gap: 27px;
   }
-  .skills-grid {
+  .technology-group-grid {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 7px;
   }
@@ -2383,7 +2433,7 @@ button {
   }
 }
 @media (max-width: 460px) {
-  .skills-grid {
+  .technology-group-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
   .technology-card {
@@ -2667,3 +2717,5 @@ button {
   .terminal-replay,
   .certificate-dialog[open] { animation: none; transition: none; }
 }
+
+.technology-card-django .technology-logo img { filter: brightness(0) invert(0.9); }

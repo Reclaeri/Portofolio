@@ -21,6 +21,26 @@ export const certificates = [
     credentialId: '1OP87LK2VZQK'
   },
   {
+    title: 'Prompt Engineering untuk Software Developer',
+    issuer: 'Dicoding',
+    date: '30 Oktober 2026',
+    category: 'Prompt Engineering',
+    group: 'Course',
+    file: 'sertifikat/sertifikat prompt engineering untuk software developer dicoding.pdf',
+    cover: 'images/certificates/dicoding-prompt-engineering-cover.png',
+    credentialId: '6RPNOY915X2M'
+  },
+  {
+    title: 'Belajar Dasar AI',
+    issuer: 'Dicoding',
+    date: '29 Oktober 2026',
+    category: 'Artificial Intelligence',
+    group: 'Course',
+    file: 'sertifikat/sertifikat belajar dasar ai dicoding.pdf',
+    cover: 'images/certificates/dicoding-ai-basics-cover.png',
+    credentialId: '07Z6Q470MZQR'
+  },
+  {
     title: 'Apresiasi Lomba Cipta Game 2026',
     issuer: 'Clevio Innovator Camp',
     date: '2026',

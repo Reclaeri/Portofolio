@@ -17,7 +17,7 @@ export const skillGroups = [
   {
     title: "Frameworks & libraries",
     icon: "◫",
-    items: ["Bootstrap", "Laravel", "Flutter"],
+    items: ["Bootstrap", "Laravel", "Flutter", "Django"],
   },
   {
     title: "Databases",
@@ -33,6 +33,7 @@ export const skillGroups = [
       "Visual Studio Code",
       "Visual Studio",
       "NetBeans",
+      "draw.io",
       "XAMPP",
       "Laragon",
       "GDevelop",
@@ -49,4 +50,5 @@ export const skillLevels = [
   { label: "Python / C#", percent: 70 },
   { label: "Dart / Flutter", percent: 50 },
   { label: "Git / GitHub", percent: 70 },
+  { label: "Draw.io/Desain System", percent: 80 },
 ];

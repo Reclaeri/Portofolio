@@ -60,4 +60,51 @@ export const projects = [
     status: "Project Screenshot",
     image: "images/projects/whatsapp-bot.jpg",
   },
+  {
+    title: "Blog Pribadi",
+    category: "Web Application / Personal Blog",
+    filter: "Web",
+    number: "06",
+    description:
+      "Aplikasi blog pribadi yang dikembangkan menggunakan Python, Django, dan MySQL.",
+    features: [
+      "Daftar artikel yang dikelompokkan berdasarkan kategori.",
+      "Halaman detail untuk membaca artikel.",
+      "Panel admin untuk mengelola tulisan.",
+      "Form kontak untuk mengirim pesan.",
+    ],
+    technologies: ["Python", "Django", "MySQL"],
+    status: "Project Screenshot",
+    image: "images/projects/blog-pribadi.png",
+  },
+  {
+    title: "Google Offices",
+    category: "Web Application / Flutter",
+    filter: "Web",
+    number: "07",
+    description: "Aplikasi web Google Offices yang dikembangkan menggunakan Flutter.",
+    features: [
+      "Pencarian kantor berdasarkan lokasi.",
+      "Kartu kantor dengan foto, nama lokasi, dan alamat.",
+    ],
+    technologies: ["Flutter", "Dart"],
+    status: "Project Screenshot",
+    image: "images/projects/google-offices.png",
+  },
+  {
+    title: "Website Nilai Raport",
+    category: "Web Application / Report Card System",
+    filter: "Web",
+    number: "08",
+    description:
+      "Website nilai raport yang dikembangkan menggunakan PHP, Laravel, dan MySQL.",
+    features: [
+      "Rekap nilai siswa dalam tampilan tabel.",
+      "Tambah dan lihat data nilai.",
+      "Edit dan hapus data nilai.",
+    ],
+    technologies: ["PHP", "Laravel", "MySQL"],
+    status: "Project Screenshot",
+    image: "images/projects/nilai-raport.png",
+  },
 ];
