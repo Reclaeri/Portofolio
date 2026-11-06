@@ -2,6 +2,7 @@ import { skillGroups, skillLevels } from "./data/skills.js";
 import { projects } from "./data/projects.js";
 import { certificates, plannedCertifications } from "./data/certificates.js";
 import { socialLinks } from "./data/socialLinks.js";
+import { journeyMilestones } from "./data/journey.js";
 
 const escapeHtml = (value = "") =>
   String(value).replace(
@@ -200,6 +201,8 @@ function initHeroParticles() {
 
 const technologyLogos = {
   HTML5: "html5",
+  HTML: "html5",
+  CSS: "css3",
   CSS3: "css3",
   JavaScript: "javascript",
   PHP: "php",
@@ -226,6 +229,100 @@ const technologyLogos = {
   GDevelop: "gdevelop",
   Vercel: "vercel",
 };
+
+const journeyRoot = document.querySelector("#journey-timeline");
+journeyRoot.innerHTML = journeyMilestones
+  .map((milestone, index) => {
+    const technologies = milestone.technologies.length
+      ? `<ul class="journey-tech-list" aria-label="Technologies">${milestone.technologies
+          .map((technology) => {
+            const logo = technologyLogos[technology] || "code";
+            return `<li class="journey-tech-chip"><img src="images/skills/${escapeHtml(logo)}.svg" alt="" loading="lazy" decoding="async"><span>${escapeHtml(technology)}</span></li>`;
+          })
+          .join("")}</ul>`
+      : "";
+    const projects = milestone.projects?.length
+      ? `<div class="journey-projects"><span class="journey-detail-label">FEATURED PROJECT${milestone.projects.length > 1 ? "S" : ""}</span><div>${milestone.projects
+          .map(
+            (project) =>
+              `<a class="journey-project-link" href="#project-${escapeHtml(project.target)}">${escapeHtml(project.name)} <span aria-hidden="true">↗</span></a>`,
+          )
+          .join("")}</div></div>`
+      : "";
+    const focus = `<details class="journey-focus"><summary>Focus and learning outcomes <span aria-hidden="true">+</span></summary><ul>${milestone.focus
+      .map((item) => `<li>${escapeHtml(item)}</li>`)
+      .join("")}</ul></details>`;
+    return `<li class="journey-item ${index % 2 === 0 ? "journey-item-left" : "journey-item-right"} ${milestone.current ? "journey-item-ongoing" : ""}" data-journey-index="${index}">
+      <span class="journey-node" aria-hidden="true">${escapeHtml(milestone.number)}</span>
+      <article class="journey-card reveal ${index % 2 === 0 ? "journey-reveal-left" : "journey-reveal-right"} ${milestone.current ? "journey-card-ongoing" : ""}" aria-labelledby="journey-milestone-${escapeHtml(milestone.number)}">
+        <div class="journey-card-top"><span class="journey-stage mono">MILESTONE ${escapeHtml(milestone.number)} / ${escapeHtml(milestone.stage)}</span>${milestone.current ? '<span class="journey-current-badge"><i aria-hidden="true"></i> CURRENT JOURNEY</span>' : ""}</div>
+        <h3 id="journey-milestone-${escapeHtml(milestone.number)}">${escapeHtml(milestone.title)}</h3>
+        <p class="journey-subtitle">${escapeHtml(milestone.subtitle || "")}</p>
+        <p class="journey-description">${escapeHtml(milestone.description)}</p>
+        ${technologies}${projects}${focus}
+      </article>
+    </li>`;
+  })
+  .join("");
+
+function initJourneyProgress() {
+  const section = document.querySelector("#journey");
+  const timeline = document.querySelector("#journey-timeline");
+  const progress = document.querySelector("#journey-progress");
+  const progressValue = document.querySelector("#journey-progress-value");
+  const currentLabel = document.querySelector("#journey-progress-current");
+  if (!section || !timeline || !progress || !progressValue || !currentLabel) return;
+  const items = [...timeline.querySelectorAll(".journey-item")];
+  if (!items.length) return;
+
+  let framePending = false;
+  let previousPercent = -1;
+  let previousActiveIndex = -1;
+  let previousStarted = false;
+  const update = () => {
+    framePending = false;
+    const rect = timeline.getBoundingClientRect();
+    const fraction = Math.max(
+      0,
+      Math.min(1, (window.innerHeight - rect.top) / (rect.height + window.innerHeight)),
+    );
+    const percent = Math.round(fraction * 100);
+    const activeIndex = Math.min(
+      items.length - 1,
+      Math.floor(fraction * items.length),
+    );
+    if (percent !== previousPercent) {
+      timeline.style.setProperty("--journey-progress", `${percent}%`);
+      progress.style.setProperty("--journey-progress-value", String(fraction));
+      progress.setAttribute("aria-valuenow", String(percent));
+      progressValue.textContent = `${percent}%`;
+      previousPercent = percent;
+    }
+    const started = fraction > 0;
+    if (activeIndex !== previousActiveIndex || started !== previousStarted) {
+      currentLabel.textContent = fraction === 0
+        ? `Scroll to begin · ${String(activeIndex + 1).padStart(2, "0")} of ${String(items.length).padStart(2, "0")}`
+        : `Reading milestone ${String(activeIndex + 1).padStart(2, "0")} of ${String(items.length).padStart(2, "0")}`;
+      items.forEach((item, index) => {
+        item.classList.toggle("is-complete", index < activeIndex);
+        item.classList.toggle("is-current", index === activeIndex);
+        const card = item.querySelector(".journey-card");
+        if (index === activeIndex) card.setAttribute("aria-current", "step");
+        else card.removeAttribute("aria-current");
+      });
+      previousActiveIndex = activeIndex;
+      previousStarted = started;
+    }
+  };
+  const scheduleUpdate = () => {
+    if (framePending) return;
+    framePending = true;
+    window.requestAnimationFrame(update);
+  };
+  window.addEventListener("scroll", scheduleUpdate, { passive: true });
+  window.addEventListener("resize", scheduleUpdate, { passive: true });
+  update();
+}
 
 function renderTechnology(item, category, index) {
   const logo = technologyLogos[item] || "code";
@@ -290,7 +387,7 @@ function renderProjects(filter = "All") {
   projectRoot.innerHTML = shown
     .map(
       ({ project, index }) => `
-      <article class="project-card reveal" style="--reveal-delay:${index * 65}ms">
+      <article class="project-card reveal" id="project-${escapeHtml(project.number)}" style="--reveal-delay:${index * 65}ms">
       <div class="project-art">
         <img class="project-image" src="${escapeHtml(project.image)}" alt="Screenshot project ${escapeHtml(project.title)}" loading="lazy" decoding="async">
         <span class="art-number">${escapeHtml(project.number)} / ${String(projects.length).padStart(2, "0")}</span>
@@ -500,6 +597,7 @@ function observeReveals() {
 }
 document.documentElement.classList.add("js-motion");
 observeReveals();
+initJourneyProgress();
 const navAnchors = [...document.querySelectorAll(".nav-links a")];
 if ("IntersectionObserver" in window) {
   const activeObserver = new IntersectionObserver(

@@ -9,6 +9,7 @@ import {
   plannedCertifications,
 } from "../src/data/certificates.js";
 import { socialLinks } from "../src/data/socialLinks.js";
+import { journeyMilestones } from "../src/data/journey.js";
 
 const root = fileURLToPath(new URL("../", import.meta.url));
 const html = readFileSync(join(root, "index.html"), "utf8");
@@ -18,6 +19,24 @@ assert.ok(
   app.indexOf("let revealObserver;") < app.indexOf("renderProjects();"),
   "The reveal observer must be initialized before the first project render.",
 );
+
+assert.equal(journeyMilestones.length, 6, "Expected six journey milestones.");
+assert.equal(journeyMilestones.at(-1)?.current, true, "The final milestone should represent the ongoing journey.");
+assert.ok(html.includes('href="#journey">Journey</a>'), "Journey should be in the navigation.");
+assert.ok(html.includes('id="journey"'), "Journey section should have its anchor.");
+assert.ok(
+  html.indexOf('id="about"') < html.indexOf('id="journey"') &&
+    html.indexOf('id="journey"') < html.indexOf('id="services"'),
+  "Journey should appear between About and Services.",
+);
+for (const target of journeyMilestones.flatMap((item) => item.projects || [])) {
+  assert.ok(
+    projects.some((project) => project.number === target.target && project.title === target.name),
+    `Journey link should target an existing project: ${target.name}`,
+  );
+}
+assert.ok(app.includes("initJourneyProgress"));
+assert.ok(app.includes("journey-progress-value"));
 
 assert.equal(projects.length, 8, "Expected all eight named projects.");
 for (const project of projects) {
@@ -149,6 +168,7 @@ for (const id of [
   "projects",
   "certificates",
   "social",
+  "journey",
 ]) {
   assert.ok(html.includes(`id="${id}"`), `Missing section anchor: ${id}`);
 }
@@ -174,5 +194,5 @@ assert.ok(html.includes('id="skill-level-count"'));
 assert.ok(app.includes('String(skillLevels.length).padStart(2, "0")'));
 
 console.log(
-  "Portfolio verification passed: sections, eight local project images, categorized technology logos, project filters, certificate previews, original certificates, and social URLs.",
+  "Portfolio verification passed: sections, six journey milestones, journey project links and progress, eight local project images, categorized technology logos, project filters, certificate previews, original certificates, and social URLs.",
 );
