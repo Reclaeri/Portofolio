@@ -78,12 +78,12 @@ assert.ok(
 for (const logo of ["java.svg", "netbeans.svg", "django.svg", "drawio.svg"]) {
   assert.ok(existsSync(join(root, "images/skills", logo)), `Missing logo: ${logo}`);
 }
-assert.equal(certificates.length, 7, "Expected seven original certificates.");
+assert.equal(certificates.length, 8, "Expected eight original certificates.");
 assert.deepEqual(
   ["Course", "Competency"].map(
     (group) => certificates.filter((certificate) => certificate.group === group).length,
   ),
-  [4, 3],
+  [4, 4],
   "Expected Dicoding courses and Neo One/Clevio competency certificates in separate groups.",
 );
 assert.deepEqual(
@@ -93,6 +93,12 @@ assert.deepEqual(
     { title: "Belajar Dasar AI", group: "Course", credentialId: "07Z6Q470MZQR" },
   ],
 );
+assert.ok(certificates.some((certificate) =>
+  certificate.title === "Junior Multi-Platform Engineer" &&
+  certificate.group === "Competency" &&
+  certificate.issuer.includes("LSP P3") &&
+  certificate.file.endsWith("sertifikat kompetensi lsp p3 revan oknanda 2026.pdf")
+));
 for (const certificate of certificates) {
   assert.ok(["Course", "Competency"].includes(certificate.group));
   assert.ok(

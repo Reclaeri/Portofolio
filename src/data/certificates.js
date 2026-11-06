@@ -66,11 +66,20 @@ export const certificates = [
     group: 'Competency',
     file: 'sertifikat/sertifikat project kik neone.pdf',
     cover: 'images/certificates/neo-one-project-cover.png'
+  },
+  {
+    title: 'Junior Multi-Platform Engineer',
+    issuer: 'Dicoding Indonesia · LSP P3',
+    date: '19 Oktober 2026',
+    category: 'Mobile Development',
+    group: 'Competency',
+    file: 'sertifikat/sertifikat kompetensi lsp p3 revan oknanda 2026.pdf',
+    cover: 'images/certificates/lsp-p3-cover.png',
+    credentialId: 'DCD-SMK/2026/X/305'
   }
 ];
 
 // Keep unearned plans separate from issued credentials.
 export const plannedCertifications = [
-  { title: 'Kompetensi LSP P1', issuer: 'LSP dan skema belum dikonfirmasi', category: 'Planned Certification', status: 'Planned' },
-  { title: 'Kompetensi LSP P3 / Dicoding', issuer: 'Kredensial dan penerbit resmi belum dikonfirmasi', category: 'Planned Certification', status: 'Planned' }
+  { title: 'Kompetensi LSP P1', issuer: 'LSP dan skema belum dikonfirmasi', category: 'Planned Certification', status: 'Planned' }
 ];
